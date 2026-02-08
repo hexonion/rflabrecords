@@ -39,9 +39,6 @@
     .nav-item{ color:#eaeaea; text-decoration:none; font-weight:500; padding:6px 8px; border-radius:6px; transition: all .25s ease; }
     .nav-item:hover{ background: rgba(255,255,255,.08); transform: translateY(-1px); }
 
-    .icon-btn{ width:38px; height:38px; border-radius:8px; border:1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.04); color:#fff; cursor:pointer; }
-    .icon-btn:hover{ background: rgba(255,255,255,.08); }
-
     /* главный контент */
     .main-content{ padding: 24px 0; }
 
@@ -88,13 +85,6 @@
     /* интерактивность + анимации */
     .reveal{ opacity: 0; transform: translateY(14px); transition: all .6s ease; }
     .reveal.visible{ opacity: 1; transform: translateY(0); }
-
-    /* кнопка-меню/как угодно для навигации по секциям */
-    .nav-underline{ height:2px; background: transparent; transition: width .25s ease; }
-    .nav-item.active ~ .nav-underline{ width: 40px; }
-
-    /* светлая тема - простая адаптация (необязательно включается по клику) */
-    [data-theme="light"]{ --bg: #f7f7fb; --bg-alt: #ffffff; --card: #ffffff; --text: #111; --muted: #5a5a5a; }
   </style>
 </head>
 <body>
@@ -107,9 +97,8 @@
       <nav class="nav" aria-label="Основная навигация">
         <a href="#about" class="nav-item">О группе</a>
         <a href="#members" class="nav-item">Участники</a>
-        <a href="#contact" class="nav-item">Контакты</a>
+        <a href="#contact" class="nav-item" style="display:none;">Контакты</a> <!-- скрыто, т.к. анкета удалена -->
       </nav>
-      <button id="theme-toggle" class="icon-btn" aria-label="Переключить тему"></button>
     </div>
   </header>
 
@@ -124,7 +113,7 @@
 
       <div class="artist-info reveal" style="padding:0 6px;">
         <h1 class="artist-name" style="margin:0 0 8px; font-family:'Playfair Display', serif;">silvain</h1>
-        <p class="tagline" style="margin:0 0 12px;">инди/гранж/шугейз • темная, меланхоличная атмосфера</p>
+        <p class="tagline" style="margin:0 0 12px; color:#ddd;">инди/гранж/шугейз • темная, меланхоличная атмосфера</p>
 
         <div class="socials" aria-label="Социальные сети">
           <a href="https://tagger.su/silvain" target="_blank" rel="noopener" class="tagger-link" aria-label="Tagger" title="Tagger">Tagger</a>
@@ -133,7 +122,7 @@
         </div>
 
         <div class="cta-row" aria-label="Действия">
-          <a href="#members" class="btn btn-primary" style="background: linear-gradient(135deg, #5e4a90, #2b2b5a); color:#fff; padding:12px 16px; border-radius:999px;">Участники</a>
+          <a href="#members" class="btn btn-primary" style="padding:12px 16px; border-radius:999px; background: linear-gradient(135deg, #5e4a90, #2b2b5a); color:#fff;">Участники</a>
           <a href="#about" class="btn btn-secondary" style="padding:12px 16px; border-radius:999px;">История</a>
         </div>
       </div>
@@ -178,21 +167,6 @@
       </div>
     </section>
 
-    <!-- Раздел контактов -->
-    <section id="contact" class="section wrap" aria-labelledby="contact-title">
-      <h2 id="contact-title" class="section-title" style="font-family:'Playfair Display', serif;">Контакты</h2>
-      <p class="lead" style="max-width:700px;">
-        Для пресс, концертов и сотрудничеств: contact@silvain.example
-      </p>
-      <form class="contact-form reveal" aria-label="Форма контактов" onsubmit="return false;">
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <input type="text" placeholder="Ваше имя" required style="flex:1 1 250px; padding:12px; border-radius:8px; background:#111; border:1px solid #333; color:#fff;">
-          <input type="email" placeholder="Email" required style="flex:1 1 250px; padding:12px; border-radius:8px; background:#111; border:1px solid #333; color:#fff;">
-        </div>
-        <textarea placeholder="Сообщение" rows="4" required style="width:100%; margin-top:10px; padding:12px; border-radius:8px; background:#111; border:1px solid #333; color:#fff;"></textarea>
-        <button type="submit" class="btn btn-primary" style="margin-top:10px; padding:12px 18px; border-radius:999px; background: linear-gradient(135deg, #5e4a90, #2b2b5a); color:#fff;">Отправить</button>
-      </form>
-    </section>
   </main>
 
   <footer class="wrap site-footer" role="contentinfo" aria-label="Подвал сайта" style="text-align:center;">
@@ -200,30 +174,8 @@
   </footer>
 
   <script>
-    // Простая логика темы (можно оставить как есть или отключить)
+    // Анимации появления
     (function(){
-      const toggle = document.getElementById('theme-toggle');
-      const root = document.documentElement;
-      let theme = localStorage.getItem('theme') || 'dark';
-      setTheme(theme);
-      if(toggle){
-        toggle.addEventListener('click', ()=> {
-          theme = (theme === 'dark') ? 'light' : 'dark';
-          setTheme(theme);
-        });
-      }
-      function setTheme(t){
-        if(t === 'light'){
-          root.setAttribute('data-theme','light');
-          if(toggle) toggle.setAttribute('aria-label','Переключить тему на тёмную');
-        } else {
-          root.setAttribute('data-theme','dark');
-          if(toggle) toggle.setAttribute('aria-label','Переключить тему на светлую');
-        }
-        localStorage.setItem('theme', t);
-      }
-
-      // Анимации по появлению
       const reveals = document.querySelectorAll('.reveal');
       const obs = new IntersectionObserver((entries) => {
         entries.forEach(e => {
@@ -234,25 +186,6 @@
         });
       }, { threshold: 0.15 });
       reveals.forEach(r => obs.observe(r));
-
-      // Активная пункт навигации по секциям
-      const sections = document.querySelectorAll('section');
-      const navLinks = document.querySelectorAll('.nav-item');
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(en => {
-          if(en.isIntersecting){
-            const id = en.target.id;
-            navLinks.forEach(a => {
-              if(a.getAttribute('href') === '#' + id){
-                a.classList.add('active');
-              } else {
-                a.classList.remove('active');
-              }
-            });
-          }
-        });
-      }, { rootMargin: '-40% 0px -50% 0px', threshold: 0.01 });
-      sections.forEach(sec => io.observe(sec));
     })();
   </script>
 </body>
